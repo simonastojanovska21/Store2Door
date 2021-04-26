@@ -1,0 +1,180 @@
+<div class="container" style="padding-bottom: 90px; padding-top: 90px;" xmlns:th="http://www.thymeleaf.org">
+    <div class="row" th:if="${orders.size() > 0 }">
+        <div class="col-8">
+            <div class="table-responsive">
+                <table class="table" id="cart">
+                    <thead>
+                    <tr>
+                        <th scope="col">Product</th>
+                        <th scope="col">Price</th>
+                        <th scope="col">Quantity</th>
+                        <th scope="col">Total</th>
+                    </tr>
+                    </thead>
+                    <tbody>
+                    <tr th:each="order:${orders}">
+                        <td class="row align-middle">
+                            <button type="submit" th:data-id="${order.id}"
+                                    class="btn btn-sm delete" style="margin-right: 10px;margin-left: 10px;">
+                                    <i class="fa fa-trash"></i>
+                            </button>
+                            <img th:src="${order.product.imageUrl}" alt="Image of the products" style="width: 80px;height: 80px;margin-right: 10px;">
+                            <span style="margin-top: 20px;" th:text="${order.product.name}"></span>
+                        </td>
+                        <td class="align-middle" th:text="${order.product.priceOnDiscount}"></td>
+
+                        <td class="align-middle">
+                        <form>
+                            <div class="form-group row" style="margin-left: 10px;">
+                                <div class="input-group">
+                                    <span class="input-group-btn">
+                                        <button type="submit" th:data-id="${order.id}" class="btn btn-sm minus pageButtons"><i class="fa fa-minus"></i></button>
+                                    </span>
+                                    <input type="text" class="form-control form-control-sm text-center" th:value="${order.quantity}" name="quantity" id="quantity">
+                                    <span class="input-group-btn">
+                                        <button type="submit" th:data-id="${order.id}" class="btn btn-sm plus pageButtons"><i class="fa fa-plus"></i></button>
+                                    </span>
+                                </div>
+                            </div>
+                        </form>
+
+                        </td >
+
+                        <td style="font-weight: bold" class="align-middle total" th:text="${order.calculateTotal()}"></td>
+                    </tr>
+                    </tbody>
+                </table>
+
+                <a class="btn btn-block buttons" href="/products">Continue shopping</a>
+
+            </div>
+        </div>
+
+        <div class="col-4">
+            <h3>Total amount in shopping cart</h3>
+            <hr>
+            <div class="row">
+                <div class="col" style="text-align: left">
+                    <span></span>
+                </div>
+                <div class="col" style="text-align: right">
+                    <span class="price">$</span>
+                    <span class="price" id="total" th:text="${total}"></span>
+                </div>
+            </div>
+            <br>
+            <br>
+            <a class="btn btn-block buttons" href="/calendar">Reserve delivery time</a>
+            <a class="btn btn-block pageButtons" href="/shopping-cart/check-out">Check out</a>
+        </div>
+    </div>
+    <div th:if="${orders.size()==0}" style="margin-left: 250px;">
+        <div class="row text-center" th:if="${orders.size()==0}">
+        <span class="headers">
+            Your shopping cart is empty
+        </span>
+
+        </div>
+        <br>
+        <br>
+        <div class="row text-center" style="margin-bottom: 20px;">
+            <a class="btn buttons" href="/products">Back to products page</a>
+        </div>
+    </div>
+
+    <script th:inline="javascript">
+
+        $('.delete').on('click',function (e){
+            e.preventDefault();
+
+            var $this = $(this);
+
+            $.ajax({
+                type:'GET',
+                url:'/shopping-cart/delete/' + $this.attr('data-id'),
+                success: function (){
+                    var $total=$this.closest('td').next('td').next('td').next('td');
+
+                    var tmp=parseFloat($('#total').text()) - parseFloat($total.text());
+                    var round=Math.round(tmp*100.0)/100.0;
+                    $this.closest('tr').remove();
+                    if(round==0)
+                        location.reload();
+                    else {
+                        $('#total').text(round);
+                    }
+                }
+            })
+
+        })
+
+
+        $('.plus').on('click', function(e){
+            e.preventDefault();
+
+            var $this = $(this);
+            var $input = $this.closest('div').find('input');
+            var value = parseInt($input.val());
+
+
+            if (value < 100) {
+                value = value + 1;
+            } else {
+                value =100;
+            }
+            $.ajax({
+                type:'GET',
+                url:'/shopping-cart/plus/'+ $this.attr('data-id'),
+                success: function (){
+                    $input.val(value);
+
+                    var $price=$this.closest('td').prev('td').text();
+                    var $total=$this.closest('td').next('td');
+                    var num=value*parseFloat($price);
+                    var final=Math.round(num * 100.0) / 100.0;
+
+                    $total.text(final);
+                    var tmp=parseFloat($('#total').text()) + parseFloat($price);
+                    var round=Math.round(tmp*100.0)/100.0;
+                    $('#total').text(round);
+                }
+            })
+
+        })
+
+        $('.minus').on('click', function(e){
+            e.preventDefault();
+            var $this = $(this);
+            var $input = $this.closest('div').find('input');
+            var value = parseInt($input.val());
+
+            if (value >= 2) {
+                value = value - 1;
+
+            $.ajax({
+                type:'GET',
+                url:'/shopping-cart/minus/'+ $this.attr('data-id'),
+                success: function (){
+                    $input.val(value);
+                    var $price=$this.closest('td').prev('td').text();
+                    var $total=$this.closest('td').next('td');
+                    var num=value*parseFloat($price);
+                    var final=Math.round(num * 100) / 100
+
+                    $total.text(final);
+
+                    var tmp=parseFloat($('#total').text()) - parseFloat($price);
+                    var round=Math.round(tmp*100.0)/100.0;
+                    $('#total').text(round);
+
+                }
+            })
+            } else {
+                value = 1;
+            }
+
+        })
+
+    </script>
+
+</div>

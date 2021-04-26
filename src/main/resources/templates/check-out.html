@@ -1,0 +1,88 @@
+<div  xmlns:th="http://www.thymeleaf.org">
+    <div class="container" style="padding-bottom: 90px; padding-top: 90px;" >
+        <div class="row">
+            <div class="col-4">
+                <h3 class="headers">Delivery information</h3>
+                <hr>
+                <br>
+                <h5>Delivery address</h5><br>
+                <div class="shadow p-3 mb-5 bg-white rounded border">
+                    <span th:text="${user.name}"></span>
+                    <span th:text="${user.surname}"></span><br>
+                    <span th:text="${user.address}"></span><br>
+                    <span th:text="${user.city}"></span>
+                </div>
+                <br>
+                <h5>Delivery time</h5>
+                <div class="shadow p-3 mb-5 bg-white rounded border" th:if="${event!=null}">
+                    <span>The delivery time you have selected is between:</span><br>
+                    <span style="color: #008E9D" th:text="${start}"></span> and<br>
+                    <span style="color: #008E9D" th:text="${finish}"></span><br>
+                    <span>You should expect your order by this time</span>
+                </div>
+                <div class="shadow p-3 mb-5 bg-white rounded border" th:if="${event==null}">
+                    <span>You have not selected the delivery time</span><br>
+                    <span>You should expect your order by:</span><br>
+                    <span style="color: #008E9D" th:text="${start}"></span> and<br>
+                    <span style="color: #008E9D" th:text="${finish}"></span>
+                </div>
+            </div>
+
+            <div class="col-8 shadow p-3 mb-5 bg-white rounded border">
+                <h3 class="headers">Order summary</h3>
+                <div class="table-responsive">
+                    <table class="table">
+                        <thead>
+                        <tr>
+                            <th scope="col">Product</th>
+                            <th scope="col">Total</th>
+                        </tr>
+                        </thead>
+                        <tbody>
+                        <tr th:each="order:${orders}">
+                            <td>
+                                <span th:text="${order.product.name}"></span>
+                                <span> x </span>
+                                <span th:text="${order.quantity}"></span>
+                            </td>
+
+                            <td  class="align-middle" th:text="${order.calculateTotal()}"></td>
+                        </tr>
+                        </tbody>
+
+                        <tfoot>
+                        <tr>
+                            <td style="font-weight: bold">Total</td>
+                            <td style="font-weight: bold">
+                                <span>$</span>
+                                <span th:text="${total}"></span>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td style="font-weight: bold">Delivery fee
+                            <small>If your total is less than $20</small>
+                            </td>
+                            <td style="font-weight: bold">
+                                <span>$</span>
+                                <span th:if="${total}<20">5</span>
+                                <span th:if="${total}>20">0</span>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td style="font-weight: bold">Total with delivery</td>
+                            <td style="font-weight: bold">
+                                <span>$</span>
+                                <span th:text="${withDelivery}"></span>
+                            </td>
+                        </tr>
+                        </tfoot>
+
+                    </table>
+                    <form th:action="@{'/shopping-cart/finish'}" th:method="POST">
+                        <button class="btn btn-block pageButtons">Finish order</button>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

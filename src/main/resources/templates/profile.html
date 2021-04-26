@@ -1,0 +1,48 @@
+<div  xmlns:th="http://www.thymeleaf.org">
+    <div class="container" style="padding-bottom: 90px; padding-top: 90px;" >
+        <div class="row">
+            <div class="col-4">
+                <h3 class="headers">User profile</h3>
+                <hr>
+                <br>
+                <div class="shadow p-3 mb-5 bg-white rounded border">
+                    <span th:text="${user.name}"></span>
+                    <span th:text="${user.surname}"></span><br>
+                    <span th:text="${user.address}"></span><br>
+                    <span th:text="${user.city}"></span>
+                </div>
+            </div>
+
+            <div class="col-2">
+
+            </div>
+
+            <div class="col-6">
+                <form th:method="POST" th:action="@{'/review'}">
+                    <h2 class="headers">Leave us a review</h2>
+                    <hr>
+                    <br>
+                    <div class="form-group">
+                        <ul class="rate-area">
+                            <input type="radio" id="5-star" name="rating" value="5" /><label for="5-star" title="Amazing">5 stars</label>
+                            <input type="radio" id="4-star" name="rating" value="4" /><label for="4-star" title="Good">4 stars</label>
+                            <input type="radio" id="3-star" name="rating" value="3" /><label for="3-star" title="Average">3 stars</label>
+                            <input type="radio" id="2-star" name="rating" value="2" /><label for="2-star" title="Not Good">2 stars</label>
+                            <input type="radio" id="1-star" name="rating" value="1" /><label for="1-star" title="Bad">1 star</label>
+                        </ul>
+                    </div>
+
+                    <div class="input-group mb-2 mr-sm-2">
+                        <div class="input-group-prepend">
+                            <div class="input-group-text"><i class="fa fa-pencil"></i></div>
+                        </div>
+                        <textarea name="description" class="form-control" id="review" rows="3"></textarea>
+                    </div>
+
+                    <button type="submit" class="btn btn-block pageButtons">Submit</button>
+
+                </form>
+            </div>
+        </div>
+    </div>
+</div>

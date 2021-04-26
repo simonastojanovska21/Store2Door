@@ -1,0 +1,131 @@
+<header class="text-white-50 " xmlns:th="http://www.thymeleaf.org" xmlns:sec="http://www.w3.org/1999/xhtml">
+
+    <nav class="navbar navbar-expand-md navbar-light " style="background-color: #FFFFFF;">
+        <div class="container">
+            <a class="navbar-brand" href="/"><img th:src="@{/img/logo.png}"
+                                                  height="90px">&nbsp;&nbsp;&nbsp;<span class="titles">Store 2 Door</span></a>
+
+            <div class="collapse navbar-collapse justify-content-end" id="firstRow">
+
+                <div class="navbar-nav m-auto">
+                    <form class="form-inline" th:method="POST" th:action="@{'/products/filter'}">
+                        <div class="input-group ">
+                            <input type="text" class="form-control" aria-label="Small"
+                                   name="name" id="name"
+                                   aria-describedby="inputGroup-sizing-sm"
+                                   placeholder="Search by name...">
+                            <div class="input-group-append">
+                                <button type="button" class="btn buttons">
+                                    <i class="fa fa-search"></i>
+                                </button>
+                            </div>
+                        </div>
+                    </form>
+                </div>
+                <ul class="nav navbar-nav navbar-right">
+
+                    <li class="nav-item" sec:authorize="isAuthenticated()">
+                        <a class="btn buttons ml-3"  href="/profile">
+                            <i class="fa fa-user"></i> <br> <th:block th:if="${#request.getRemoteUser() != null}"
+                                      th:text="${#request.getRemoteUser()}">
+                            </th:block>
+                        </a>
+                    </li>
+
+                    <li class="nav-item"  sec:authorize="!isAuthenticated()">
+                        <h6 class="btn buttons ml-3">
+                    <span
+                            class="editable"
+                            data-toggle="popover"
+                            data-container="body"
+                            data-title="Login"
+                            data-placement="bottom"
+                            data-content="<form method='POST' action='/login'>
+                    <div class='form-group'>
+                        <label for='username'>Username</label>
+                        <input type='text' class='form-control' id='username' name='username' placeholder='Enter username'>
+                    </div>
+                    <div class='form-group'>
+                        <label for='password'>Password</label>
+                        <input type='password' class='form-control' id='password' name='password' placeholder='Password'>
+                    </div>
+                    <button class='btn btn-block buttons' type='submit'>Sign in</button>
+                    </form>
+                    <form action='/signin/facebook' style='margin-top:10px' method='POST'>
+                         <div class='form-group'>
+                        <input type='hidden' name='scope' value='public_profile' />
+                        <button class='btn btn-block buttons' type='submit'><i class='fa fa-facebook' aria-hidden='true'></i>  Sign in with facebook</button>
+                        </div>
+                    </form>
+
+                    <a href='/register' style='margin-top:5px;' class='btn btn-block pageButtons'>Register here</a>">
+                        <i class="fa fa-sign-in" aria-hidden="true"></i> <br> Login / Register
+                    </span>
+                        </h6>
+                    </li>
+
+                    <li class="nav-item"  sec:authorize="isAuthenticated()" >
+                        <a class="btn buttons ml-3" href="/logout">
+                            <i class="fa fa-sign-out"></i> <br> Logout
+                        </a>
+                    </li>
+
+                    <li class="nav-item" sec:authorize="isAuthenticated()" >
+                        <a class="btn ml-3 buttons" href="/shopping-cart">
+                            <i class="fa fa-shopping-cart"></i> <br> Cart
+                        </a>
+                    </li>
+
+                </ul>
+            </div>
+        </div>
+    </nav>
+
+    <nav class="navbar navbar-expand-md  navbar-light " style="background-color: #FFFFFF;">
+        <div class="container">
+            <div class="collapse navbar-collapse" id="navbarSupportedContent">
+                <ul class="nav navbar-nav mr-auto">
+
+                    <li class="nav-item dropdown" th:each="cat : ${categories}" style="padding: 10px;">
+                        <a class="nav-link" style="display: inline" th:text="${cat.name}" th:href="@{/products(catId=${cat.id})}"></a>
+                        <a class="nav-link dropdown-toggle" style="display: inline;margin-left: -15px;" href="#" data-toggle="dropdown">
+                        </a>
+                        <ul class="dropdown-menu">
+                            <li class="dropdown-item" th:each="sub:${cat.subCategories}">
+                                <a th:href="@{/products(catId=${sub.id})}" style="margin-right: 15px;text-decoration: none;color: #F9423A">
+                                    <figure>
+                                        <img th:src="${sub.image}" style="max-width: 100px;max-height: 100px;padding-bottom: 10px;position: center;" alt="Category name">
+                                        <figcaption><h6 style="color: #F9423A; font-weight: bold; text-align: center" th:text="${sub.name}"></h6></figcaption>
+                                    </figure>
+                                </a>
+                            </li>
+
+                        </ul>
+                    </li>
+                </ul>
+                <ul class="nav navbar-nav navbar-right">
+                    <li class="nav-item" sec:authorize="hasRole('ROLE_ADMIN')">
+                        <a class="btn ml-3 buttons" href="/products/manage">
+                            <i class="fa fa-percent"></i> Manage products
+                        </a>
+                    </li>
+
+                    <li class="nav-item">
+                        <a class="btn ml-3 buttons" href="/calendar">
+                            <i class="fa fa-calendar"></i>  Reserve
+                        </a>
+                    </li>
+
+                </ul>
+            </div>
+        </div>
+    </nav>
+
+    <script type="text/javascript">
+        $("h6 > .editable").popover({
+            html: true,
+            sanitize: false
+        });
+    </script>
+
+</header>

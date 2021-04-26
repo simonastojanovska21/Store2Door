@@ -1,0 +1,39 @@
+<div class="container" xmlns:th="http://www.thymeleaf.org">
+    <div id="register">
+
+        <form class="mt-xl-5" method="post" action="/login">
+
+            <h2 class="text-dark-50 headers" style="text-align: center">Log in </h2>
+            <hr>
+
+            <div class="input-group mb-2">
+                <div class="input-group-prepend">
+                    <div class="input-group-text">
+                        <i class="fa fa-user" aria-hidden="true"></i>
+                    </div>
+                </div>
+                <input type="text" class="form-control" id="username" name="username" placeholder="Enter username">
+            </div>
+
+            <div class="input-group mb-2">
+                <div class="input-group-prepend">
+                    <div class="input-group-text">
+                        <i class="fa fa-lock" aria-hidden="true"></i>
+                    </div>
+                </div>
+                <input type="password" class="form-control" id="password" name="password" placeholder="Password">
+            </div>
+
+            <button class="btn btn-block buttons" type="submit">Sign in</button>
+
+        </form>
+
+        <form action="/signin/facebook" style="margin-top: 10px;" method="POST">
+            <input type="hidden" name="scope" value="public_profile" />
+            <button class="btn btn-block buttons" type="submit"><i class="fa fa-facebook" aria-hidden="true"></i>  Sign in with facebook</button>
+        </form>
+        <a href="/register" style="margin-top:5px;" class="btn btn-block pageButtons">Register here</a>
+
+    </div>
+
+</div>

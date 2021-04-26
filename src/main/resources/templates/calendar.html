@@ -1,0 +1,155 @@
+<div  xmlns:th="http://www.thymeleaf.org">
+
+    <div class="alert alert-danger" role="alert" id="alert" style="position: fixed; top: 5px; left:2%; width: 96%;">
+        Please pick a valid time for delivery
+    </div>
+
+    <div class="alert alert-danger" role="alert" id="deleteEvent" style="position: fixed; top: 5px; left:2%; width: 96%;">
+        You can only delete your own events
+    </div>
+
+    <div class="alert alert-danger" role="alert" id="login" style="position: fixed; top: 5px; left:2%; width: 96%;">
+        You must be logged in to reserve delivery time.
+    </div>
+
+    <div class="container" style="padding-top: 80px;">
+
+        <div style="padding-bottom: 50px;">
+            <h2 class="headers">Reserve your delivery time</h2>
+            <hr>
+            <br>
+            <span class="text-muted">
+                You can pick the time for delivery of your products. After you've selected the products if want you can pick time
+                for delivery.The time slot you've picked will be marked with circle, whereas the other are with lock. The time slots that are with lock are already
+                chosen, so please pick a valid one. After you've selected the time for delivery you can proceed to payment.
+                Additionally you can delete the time slot, simply by clicking on it.
+            </span>
+        </div>
+        <div id='calendar'>
+
+
+        </div>
+    </div>
+
+    <input type="text" style="display: none" id="username" th:if="${#request.getRemoteUser() != null}"
+                   th:value="${#request.getRemoteUser()}" >
+
+    <script th:inline="javascript">
+
+
+        document.addEventListener('DOMContentLoaded', function() {
+            $('#alert').hide();
+            $('#deleteEvent').hide();
+            $('#login').hide();
+            var calendarEl = document.getElementById('calendar');
+
+            var calendar = new FullCalendar.Calendar(calendarEl, {
+                initialView: 'timeGridFourDay',
+                slotDuration: '01:00',
+                slotMinTime:'08:00',
+                slotMaxTime:'21:00',
+                contentHeight:500,
+                expandRows:true,
+                allDaySlot: false,
+                nowIndicator: true,
+                editable:true,
+                eventColor:'#008E9D',
+                slotLabelFormat: {
+                    hour: '2-digit',
+                    minute: '2-digit',
+                    hour12: false
+                },
+                headerToolbar: {
+                    left: 'prev,next',
+                    center: 'title',
+                    right: 'timeGridDay,timeGridFourDay'
+                },
+                views: {
+                    timeGridFourDay: {
+                        type: 'timeGrid',
+                        duration: { days: 3 },
+                        buttonText: '3 day'
+                    }
+                },
+                events: {
+                    url: '/allevents',
+                    type: 'GET',
+                    error: function() {
+                        alert('there was an error while fetching events!');
+                    },
+                },
+
+                dateClick: function(info) {
+                    var logged=$('#username').val();
+                    if(logged===undefined)
+                    {
+                        $("#login").fadeTo(3000, 1000).slideUp(1000, function(){
+                            $("#login").slideUp(1000);
+                        });
+                        return;
+                    }
+                    if(info.date < (Date.now() + 3600000 ) )
+                    {
+                        $("#alert").fadeTo(3000, 1000).slideUp(1000, function(){
+                            $("#alert").slideUp(1000);
+                        });
+                    }
+                    else
+                    {
+                        var start=moment(info.date).format("YYYY-MM-DDTHH:mm:ss")
+                        $.ajax({
+                           type: 'GET',
+                           url:'/save?start='+start,
+                            success: function(){
+                                calendar.refetchEvents()
+                            },
+                        });
+                    }
+                },
+                eventContent: function(eventInfo) {
+
+                    user=eventInfo.event.extendedProps.customer;
+                    tmp=JSON.stringify(user);
+                    var JSONObject = JSON.parse(tmp);
+                    var c = JSONObject["username"];
+                    var logged=$('#username').val();
+                    if(logged==c)
+                    {
+                        return {
+                            html:'<span class="text-center" style="padding-left: 150px;padding-top: 5px"><i class="fa fa-circle-o" aria-hidden="true"></i></span>'
+                        }
+                    }
+                    else{
+                        return {
+                            html:'<span class="text-center" style="padding-left: 150px;padding-top: 5px"><i class="fa fa-lock" aria-hidden="true"></i></span>'
+                        }
+                    }
+                },
+                eventClick: function(info) {
+                    var ev = calendar.getEventById(info.event.id);
+                    var user=ev.extendedProps.customer.username;
+                    var logged=$('#username').val();
+                    if(logged==user){
+                        $.ajax({
+                            url:'/delete?id='+info.event.id,
+                            type:'GET',
+                            success:function (){
+                                calendar.refetchEvents()
+                            }
+                        });
+                    }
+                    else {
+                        $("#deleteEvent").fadeTo(3000, 1000).slideUp(1000, function(){
+                            $("#deleteEvent").slideUp(1000);
+                        });
+                    }
+                }
+            });
+            calendar.setOption('slotLabelFormat', function (data) {
+                return moment(data.date).format("HH:mm") + " - " + moment(data.date).add(60, 'minutes').format("HH:mm");
+            });
+
+            calendar.render();
+        });
+    </script>
+</div>

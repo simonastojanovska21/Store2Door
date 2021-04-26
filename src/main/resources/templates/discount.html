@@ -1,0 +1,117 @@
+<div xmlns:th="http://www.thymeleaf.org">
+    <div class="container" style="padding-top: 80px;padding-bottom: 80px;">
+        <div class="row">
+            <div class="col-12">
+                <a class="btn btn-block buttons" href="/products/addProduct" >Add new product</a>
+            </div>
+            <div class="col-12" th:if="${products.size() > 0}">
+                <span class="headers">List of all products</span>
+
+                <div class="table-responsive">
+
+                    <table class="table table-hover">
+                        <thead>
+                        <tr>
+                            <th scope="col">Code</th>
+                            <th scope="col">Name</th>
+                            <th scope="col">Price</th>
+                            <th scope="col">Price on discount</th>
+                            <th scope="col">Discount</th>
+                        </tr>
+                        </thead>
+                        <tbody>
+                        <tr th:each="product : ${products}">
+                            <td th:text="${product.code}"></td>
+                            <td th:text="${product.name}"></td>
+                            <td th:text="${product.price}"></td>
+                            <td th:text="${product.priceOnDiscount}"></td>
+
+                            <td class="text-right">
+                                <form th:action="@{'/products/discount/{code}' (code=${product.code})}"
+                                      th:method="POST">
+
+                                    <div class="form-group row" style="margin-left: 10px;">
+
+                                        <div class="input-group col-sm-7">
+                                            <span class="input-group-btn">
+                                                <button type="button" class="btn btn-sm  pageButtons btn-minuse"><i class="fa fa-minus"></i></button>
+                                            </span>
+
+                                            <input type="text" class="form-control form-control-sm text-center" th:value="${product.discount}" name="discount">
+
+                                            <span class="input-group-btn">
+                                                <button type="button" class="btn btn-sm  pageButtons btn-pluss"><i class="fa fa-plus"></i></button>
+                                            </span>
+                                        </div>
+                                        <button type="submit"
+                                                class="btn btn-sm col-sm-4 pageButtons" style="margin-left: 10px;">
+                                            Add discount
+                                        </button>
+                                    </div>
+
+                                </form>
+                            </td>
+                            <td class="text-right">
+                                <form th:action="@{'/products/removeDiscount/{code}' (code=${product.code})}"
+                                      th:method="POST">
+                                    <button type="submit"
+                                            class="btn btn-sm  pageButtons" >
+                                        Remove discount
+                                    </button>
+                                </form>
+                            </td>
+
+                            <td class="text-right">
+                                <a th:href="@{'/products/edit/{code}' (code=${product.code})}" class="btn btn-sm pageButtons" ><i class="fa fa-pencil-square-o"></i>Edit</a>
+                            </td>
+                            <td class="text-right">
+                                <form th:action="@{'/products/delete/{code}' (code=${product.code})}"
+                                      th:method="DELETE">
+                                    <button type="submit"
+                                            class="btn btn-sm  pageButtons" >
+                                        <i class="fa fa-trash"></i>Delete
+                                    </button>
+                                </form>
+                            </td>
+
+                        </tr>
+                        </tbody>
+                    </table>
+
+                </div>
+            </div>
+        </div>
+    </div>
+    <script>
+        $('.btn-minuse').on('click', function(e){
+            e.preventDefault();
+            var $this = $(this);
+            var $input = $this.closest('div').find('input');
+            var value = parseInt($input.val());
+
+            if (value > 1) {
+                value = value - 1;
+            } else {
+                value = 0;
+            }
+
+            $input.val(value);
+        })
+
+        $('.btn-pluss').on('click', function(e){
+            e.preventDefault();
+            var $this = $(this);
+            var $input = $this.closest('div').find('input');
+            var value = parseInt($input.val());
+
+            if (value < 100) {
+                value = value + 1;
+            } else {
+                value =100;
+            }
+
+            $input.val(value);
+        })
+
+    </script>
+</div>

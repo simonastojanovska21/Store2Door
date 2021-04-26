@@ -1,0 +1,145 @@
+.titles{
+    font-family: 'Droid Serif', serif;
+    font-size: 36px;
+    color: #F9423A;
+    font-style: italic;
+    font-weight: bold;
+}
+
+.headers{
+    font-family: 'Droid Serif', serif;
+    font-size: 36px;
+    color: #008E9D;
+    font-style: italic;
+    font-weight: bold;
+}
+
+.buttons{
+    background-color: rgb(249,66,58);
+    color: white;
+}
+
+.pageButtons{
+    background-color: #008E9D;
+    color: white;
+}
+
+
+.nav { margin-bottom: 0; }
+.nav > li.dropdown.open { position: static; }
+.nav > li.dropdown.open .dropdown-menu {display:table; width: 100%; text-align: center; left:0; right:0; }
+.dropdown-menu>li { display: table-cell; }
+
+#productsList{
+    display: grid;
+    grid-template-columns: 240px 240px 240px 240px;
+    grid-gap: 20px;
+}
+
+#productsList >  li > a > figure > img {
+    height: 200px;
+    width: 200px;
+    position: relative;
+}
+
+#discountList{
+    display: grid;
+    grid-template-columns: 220px 220px 220px 220px 220px;
+    grid-gap: 20px;
+}
+
+#discountList >  li > a > figure > img {
+    height: 180px;
+    width: 180px;
+    position: relative;
+}
+
+
+.prod{
+    transition: transform .2s;
+}
+
+.prod:hover{
+    transform: scale(1.1);
+}
+
+.price{
+    font-size: 30px;
+    font-weight: bold;
+}
+
+input[type=number]::-webkit-inner-spin-button,
+input[type=number]::-webkit-outer-spin-button {
+    -webkit-appearance: none;
+    margin: 0;
+}
+
+#categoriesList{
+    padding-left: 30px;
+    display: grid;
+    grid-template-columns: 245px 245px 245px 245px;
+    grid-gap: 20px;
+}
+
+#categoriesList >  li > a > figure > img {
+    height: 200px;
+    width: 200px;
+    position: relative;
+}
+
+#calendar {
+    max-width: 1100px;
+    margin: 40px auto;
+}
+
+#register{
+    max-width: 600px;
+    padding-bottom: 80px;
+
+    margin-left: 250px;
+}
+
+.rate-area {
+    float: left;
+    border-style: none;
+}
+
+.rate-area:not(:checked) > input {
+    position: absolute;
+    top: -9999px;
+    clip: rect(0,0,0,0);
+}
+
+.rate-area:not(:checked) > label {
+    float: right;
+    width: 1em;
+    padding: 0 .1em;
+    overflow: hidden;
+    white-space: nowrap;
+    cursor: pointer;
+    font-size: 400%;
+    line-height: 1.2;
+    color: lightgrey;
+    text-shadow: 1px 1px #bbb;
+}
+
+.rate-area:not(:checked) > label:before { content: '★ '; }
+
+.rate-area > input:checked ~ label {
+    color: gold;
+    text-shadow: 1px 1px #c60;
+
+}
+
+.rate-area:not(:checked) > label:hover, .rate-area:not(:checked) > label:hover ~ label { color: gold; }
+
+.rate-area > input:checked + label:hover, .rate-area > input:checked + label:hover ~ label, .rate-area > input:checked ~ label:hover, .rate-area > input:checked ~ label:hover ~ label, .rate-area > label:hover ~ input:checked ~ label {
+    color: gold;
+    text-shadow: 1px 1px goldenrod;
+}
+
+.rate-area > label:active {
+    position: relative;
+    top: 2px;
+    left: 2px;
+}

@@ -1,0 +1,163 @@
+<div xmlns:th="http://www.thymeleaf.org" xmlns:sec="http://www.w3.org/1999/xhtml">
+
+    <div class="container" style="padding-top: 90px; padding-bottom: 90px">
+        <div class="row">
+            <div class="col-4">
+                <img th:src="${product.imageUrl}" alt="Image of the products" style="width: 400px;height: 400px">
+            </div>
+            <div class="col-8">
+                <div style="margin-left: 50px;">
+                <span class="headers" th:text="${product.name}"></span>
+                <hr>
+
+                    <div class="row" th:if="${product.discount}!=0.0">
+                        <div class="col text-center">
+                            <span class="price">$</span>
+                            <span class="price" th:text="${product.priceOnDiscount}"></span>
+                            <span class="price"> / </span>
+                            <span class="price" th:text="${product.measure}"></span>
+                        </div>
+                        <div class="col" style="text-decoration: line-through">
+                            <span class="price">$</span>
+                            <span class="price" th:text="${product.price}"></span>
+                            <span class="price"> / </span>
+                            <span class="price" th:text="${product.measure}"></span>
+                        </div>
+                    </div>
+                    <div class="row" th:if="${product.discount}==0.0">
+                        <span class="price">$</span>
+                        <span class="price" th:text="${product.price}"></span>
+                        <span class="price"> / </span>
+                        <span class="price" th:text="${product.measure}"></span>
+                    </div>
+                <br>
+
+                <form style="margin-top:30px;margin-bottom: 20px; width: 450px;">
+
+                    <div class="row">
+                        <button type="button" class="btn btn-lg col-lg  pageButtons btn-minuse"><i class="fa fa-minus"></i></button>
+
+                        <input type="text" class="form-control col-lg form-control-lg text-center" value="1" name="quantity" style="height: 50px;">
+
+                        <button type="button" class="btn btn-lg  col-lg  pageButtons btn-pluss"><i class="fa fa-plus"></i></button>
+
+                        <button type="submit" th:data-id="${product.code}"
+                                class="btn btn-lg col-lg pageButtons" style="margin-left: 10px;">
+                            <i class="fa fa-cart-plus"></i>Add
+                        </button>
+                    </div>
+
+                </form>
+                    <br>
+                    <p class="text-secondary" th:text="${product.description}"></p>
+                </div>
+            </div>
+        </div>
+        <br>
+        <br>
+        <span class="headers">Check out our products on discount</span>
+        <hr>
+        <br>
+        <div class="row">
+            <ul class="list-unstyled" id="discountList">
+                <li class="shadow p-3 mb-5 bg-white rounded border prod text-center" th:each="prod:${products}">
+                    <a th:href="@{'/products/details/{code}' (code=${prod.code})}">
+                        <figure>
+                            <img th:src="${prod.imageUrl}" alt="Image of the products">
+                            <figcaption><h5 style="color: #008E9D;" th:text="${prod.name}"></h5></figcaption>
+                        </figure>
+                    </a>
+                    <hr>
+                    <div class="row" th:if="${prod.discount}!=0.0">
+                        <div class="col text-center">
+                            <span style="font-weight: bold; font-size: 20px;">$</span>
+                            <span style="font-weight: bold; font-size: 20px;" th:text="${prod.priceOnDiscount}"></span>
+                            <span style="font-weight: bold; font-size: 15px;"> / </span>
+                            <span style="font-weight: bold;  font-size: 15px;" th:text="${prod.measure}"></span>
+                        </div>
+                        <div class="col" style="text-decoration: line-through">
+                            <span style=" font-size: 20px;">$</span>
+                            <span style=" font-size: 20px;" th:text="${prod.price}"></span>
+                            <span style=" font-size: 15px;"> / </span>
+                            <span style=" font-size: 15px;" th:text="${prod.measure}"></span>
+                        </div>
+                    </div>
+                    <hr>
+                    <form sec:authorize="isAuthenticated()">
+                        <div class="row">
+                            <button type="button" class="btn btn-sm col-sm  pageButtons btn-minuse"><i class="fa fa-minus"></i></button>
+
+                            <input type="text" class="form-control col-sm form-control-sm text-center" value="1" name="quantity" style="height: 50px;">
+
+                            <button type="button" class="btn btn-sm  col-sm  pageButtons btn-pluss"><i class="fa fa-plus"></i></button>
+
+                            <button type="submit" th:data-id="${prod.code}"
+                                    class="btn btn-sm col-sm pageButtons add" style="margin-left: 10px;">
+                                <i class="fa fa-cart-plus"></i>Add
+                            </button>
+                        </div>
+
+                    </form>
+
+                </li>
+
+            </ul>
+        </div>
+
+
+    </div>
+
+    <script th:inline="javascript">
+
+        $('.add').on('click', function (e){
+            e.preventDefault();
+
+            var $this=$(this);
+
+            var $input=$this.closest('div').find('input');
+            var quantity=parseInt($input.val());
+
+            $.ajax({
+                type:'GET',
+                url:'/shopping-cart/add/'+$this.attr('data-id')+'?quantity='+quantity,
+                success:function (){
+
+                }
+            })
+
+        })
+
+        $('.btn-minuse').on('click', function(e){
+            e.preventDefault();
+            var $this = $(this);
+            var $input = $this.closest('div').find('input');
+            var value = parseInt($input.val());
+
+            if (value > 2) {
+                value = value - 1;
+            } else {
+                value = 1;
+            }
+
+            $input.val(value);
+        })
+
+        $('.btn-pluss').on('click', function(e){
+            e.preventDefault();
+            var $this = $(this);
+            var $input = $this.closest('div').find('input');
+            var value = parseInt($input.val());
+
+            if (value < 100) {
+                value = value + 1;
+            } else {
+                value =100;
+            }
+
+            $input.val(value);
+        })
+
+    </script>
+
+
+</div>

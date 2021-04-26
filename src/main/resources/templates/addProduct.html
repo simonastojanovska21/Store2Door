@@ -1,0 +1,124 @@
+<div style="background-color: #FEF1F1" xmlns:th="http://www.thymeleaf.org">
+    <div class="container" style="padding-bottom: 100px; padding-top: 50px">
+        <div class="row">
+            <div class="col-md-5">
+                <span style="font-family: 'Droid Serif'; font-size: 36px;color: #F9423A;font-style: italic;
+                         font-weight: bold;">Add new product</span>
+                <hr>
+                <br>
+                <form th:method="POST" th:action="@{'/products/{code}' (code=${product?.code})}">
+
+                    <div class="form-group">
+                        <label for="code">Product code</label>
+                        <input type="number"
+                               class="form-control"
+                               id="code"
+                               name="code"
+                               required
+                               th:value="${product?.code}"
+                               placeholder="Enter product code">
+                    </div>
+
+                    <div class="form-group">
+                        <label for="name">Product name</label>
+                        <input type="text"
+                               class="form-control"
+                               id="name"
+                               name="name"
+                               required
+                               th:value="${product?.name}"
+                               placeholder="Enter product name">
+                    </div>
+
+                    <div class="form-group">
+                        <label for="price">Product price</label>
+                        <input type="number" step="any"
+                               class="form-control"
+                               id="price"
+                               name="price"
+                               required
+                               th:value="${product?.price}"
+                               placeholder="Enter product price">
+                    </div>
+
+                    <div class="form-group" th:if="${product}!=null">
+                        <label for="discount">Product discount</label>
+                        <input type="number" step="any"
+                               class="form-control"
+                               id="discount"
+                               name="discount"
+                               required
+                               th:value="${product?.discount}"
+                               placeholder="Enter discount for product">
+                    </div>
+
+                    <div class="form-group">
+                        <label for="quantity">Product quantity</label>
+                        <input type="number"
+                               class="form-control"
+                               id="quantity"
+                               name="quantity"
+                               required
+                               th:value="${product?.quantity}"
+                               placeholder="Enter product quantity">
+                    </div>
+
+                    <div class="form-group">
+                        <label for="description">Product description</label>
+                        <input type="text"
+                               class="form-control"
+                               id="description"
+                               name="description"
+                               required
+                               th:value="${product?.description}"
+                               placeholder="Enter product description">
+                    </div>
+
+                    <div class="form-group">
+                        <label for="imageUrl">Product image</label>
+                        <input type="text"
+                               class="form-control"
+                               id="imageUrl"
+                               name="imageUrl"
+                               required
+                               th:value="${product?.imageUrl}"
+                               placeholder="Enter product image">
+                    </div>
+
+                    <div class="form-group">
+                        <label for="measure">Product measure</label>
+                        <select id="measure" name="measure" class="form-control" >
+                            <option th:if="${product}!=null"
+                                    th:selected="${product.getMeasure().equals(measure)}"
+                                    th:each="measure:${measures}"
+                                    th:text="${measure.name()}"></option>
+                            <option th:if="${product==null}"
+                                    th:each="measure : ${measures}"
+                                    th:text="${measure.name()}">
+                            </option>
+                        </select>
+                    </div>
+
+                 <!---<div th:style="${product.categories.size()!=0 ? 'display:none' : ''}">
+                       <div class="form-group">
+                           <label for="category">Category name</label>
+                           <select id="category" name="category" class="form-control" multiple="multiple" size="5">>
+                               <option th:style="${cat.getSubCategories().size()!=0 ? '': 'padding-left:15px'}"
+                                       th:each="cat : ${subcategories}"
+                                       th:value="${cat.getId()}"
+                                       th:text="${cat.getName()}">
+                               </option>
+
+                           </select>
+                       </div>
+                   </div>-->
+
+                    <br>
+                    <button  type="submit" class="btn ml-3" style="background-color: rgb(249,66,58);color: white;">Submit</button>
+                    <a type="button" class="btn ml-3" style="background-color: white;color: #F9423A" href="/">Back</a>
+                </form>
+            </div>
+        </div>
+    </div>
+
+</div>

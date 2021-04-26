@@ -1,0 +1,26 @@
+<div style="background-color: #FEF1F1" xmlns:th="http://www.thymeleaf.org">
+    <div class="container" style="padding-bottom: 100px; padding-top: 50px">
+        <div class="row">
+            <div class="col-md-5">
+                 <span class="titles">Add new category</span>
+                <hr>
+                <br>
+                <form th:method="POST" th:action="@{'/addCategory'}">
+                    <div class="form-group">
+                        <label for="name">Category name</label>
+                        <input type="text"
+                               class="form-control"
+                               id="name"
+                               name="name"
+                               required
+                               placeholder="Enter category name">
+                    </div>
+                    <br>
+                    <button  type="submit" class="btn buttons ml-3">Submit</button>
+                    <a type="button" class="btn ml-3 buttons">Back</a>
+                </form>
+            </div>
+        </div>
+    </div>
+
+</div>
